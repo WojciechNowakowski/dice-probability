@@ -98,8 +98,14 @@
       <height>51</height>
      </rect>
     </property>
+    <property name="smallDecimalPoint">
+     <bool>false</bool>
+    </property>
     <property name="digitCount">
      <number>10</number>
+    </property>
+    <property name="value" stdset="0">
+     <double>0.000000000000000</double>
     </property>
    </widget>
    <widget class="QPushButton" name="ExecButton">

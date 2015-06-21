@@ -21,11 +21,11 @@ void MainWindow::on_ExecButton_clicked()
 	int diceNo = ui->diceNoSpin->value();
 	int rollNo = ui->rollNoSpin->value();
 	int faceNo = ui->faceNoSpin->value();
-	int ilosc_mozliwosci = pow(faceNo, diceNo);
 	int zgodne = 0;
+	diceNo = diceNo * rollNo;
+	int ilosc_mozliwosci = pow(faceNo, diceNo);
 	std::vector<int> wiersz(ilosc_mozliwosci);
 	std::vector<std::vector<int>> wiersze;
-	diceNo = diceNo * rollNo;
 	ui->ExecButton->setEnabled(false);
 	ui->textEdit->clear();
 	qApp->processEvents();
