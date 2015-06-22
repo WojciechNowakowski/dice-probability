@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow
 	private:
 		Ui::MainWindow *ui;
 		bool sprawdz_comb(QString badany, QString wzorzec);
+		QString przetworz_string(QString number, int lenght);
 };
 
 #endif // MAINWINDOW_H

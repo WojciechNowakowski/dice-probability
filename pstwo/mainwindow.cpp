@@ -15,52 +15,6 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-void MainWindow::on_ExecButton_clicked()
-{
-	QString combination_str = ui->combEdit->text();
-	int diceNo = ui->diceNoSpin->value();
-	int rollNo = ui->rollNoSpin->value();
-	int faceNo = ui->faceNoSpin->value();
-	int zgodne = 0;
-	diceNo = diceNo * rollNo;
-	int ilosc_mozliwosci = pow(faceNo, diceNo);
-	std::vector<int> wiersz(ilosc_mozliwosci);
-	std::vector<std::vector<int>> wiersze;
-	ui->ExecButton->setEnabled(false);
-	ui->textEdit->clear();
-	qApp->processEvents();
-
-	for(int i = 0; i < diceNo; ++i) // stworzenie tablicy kombinacji
-	{
-		wiersze.push_back(wiersz);
-	}
-
-	for (int wierszNo = 1; wierszNo < diceNo + 1; ++wierszNo)
-	{
-		for (int i = 0; i < pow(faceNo, wierszNo); ++i)
-		{
-			for (int j = i * pow(faceNo, diceNo - wierszNo); j < (i + 1) * pow(faceNo, diceNo - wierszNo); ++j)
-			{
-				wiersze[wierszNo - 1][j] = i % faceNo + 1;
-			}
-		}
-	}
-
-	for (int i = 0; i < ilosc_mozliwosci; ++i)
-	{
-		QString badana_comb;
-		for (int wierszNo = 0; wierszNo < diceNo; ++wierszNo)
-		{
-			badana_comb.append(QString::number(wiersze[wierszNo][i]));
-		}
-		if(sprawdz_comb(badana_comb, combination_str))
-			zgodne++;
-	}
-	double procent = (double)zgodne * 100.0 / (double)ilosc_mozliwosci;
-	ui->resultLCD->display(QString::number(procent));
-	ui->ExecButton->setEnabled(true);
-}
-
 bool MainWindow::sprawdz_comb(QString badany, QString wzorzec)
 {
 	bool wynik = false;
@@ -84,4 +38,62 @@ bool MainWindow::sprawdz_comb(QString badany, QString wzorzec)
 			ui->textEdit->append(temp);
 	}
 	return wynik;
+}
+
+void MainWindow::on_ExecButton_clicked()
+{
+	QString combination_str = ui->combEdit->text();
+	int diceNo = ui->diceNoSpin->value();
+	int rollNo = ui->rollNoSpin->value();
+	int faceNo = ui->faceNoSpin->value();
+	int zgodne = 0;
+	diceNo = diceNo * rollNo;
+	int ilosc_mozliwosci = pow(faceNo, diceNo);
+	std::vector<int> wiersz;
+
+	ui->ExecButton->setEnabled(false);
+	ui->textEdit->clear();
+	qApp->processEvents();
+
+	for (int i = 0; i < ilosc_mozliwosci; ++i)
+	{
+		QString liczba = QString::number(i, faceNo);
+		liczba = przetworz_string(liczba, diceNo);
+		//std::cout << liczba.toStdString() << std::endl;
+		if(sprawdz_comb(liczba, combination_str))
+			zgodne++;
+	}
+	std::cout << zgodne << " / " << ilosc_mozliwosci << std::endl;
+	double procent = (double)zgodne * 100.0 / (double)ilosc_mozliwosci;
+	ui->resultLCD->display(QString::number(procent));
+	ui->ExecButton->setEnabled(true);
+}
+
+QString MainWindow::przetworz_string(QString number, int lenght)
+{
+	QString result = "";
+	for (int i = 0; i < lenght - number.length(); ++i)
+	{
+		result.append("0");
+	}
+	result.append(number);
+	for(int j = 0; j < result.length(); ++j)
+	{
+		QChar znak = result.at(j);
+		if (znak == '0')
+			znak = '1';
+		else if (znak == '1')
+			znak = '2';
+		else if (znak == '2')
+			znak = '3';
+		else if (znak == '3')
+			znak = '4';
+		else if (znak == '4')
+			znak = '5';
+		else if (znak == '5')
+			znak = '6';
+
+		result.replace(j, 1, znak);
+	}
+	return result;
 }
